@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SalangSayang Resort | Our Rooms</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+    body { font-family: 'Poppins', sans-serif; }
+    h1, h2, h3, .font-serif { font-family: 'Playfair Display', serif; }
+    .room-card { transition: all 0.3s ease; }
+    .room-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -12px rgba(0,0,0,0.15); }
+    .gallery-thumb { transition: all 0.2s; cursor: pointer; }
+    .gallery-thumb:hover { opacity: 0.8; transform: scale(1.02); }
+    .active-thumb { border: 2px solid #0d9488; opacity: 1; }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Navbar (sama seperti sebelumnya) -->
+  <nav class="bg-white/95 backdrop-blur-sm shadow-md sticky top-0 z-50 px-6 py-3 flex justify-between items-center flex-wrap">
+    <div class="flex items-center space-x-2">
+      <i class="fas fa-umbrella-beach text-2xl text-teal-600"></i>
+      <span class="font-bold text-2xl font-serif text-gray-800">SalangSayang<span class="text-teal-600">Resort</span></span>
+    </div>
+    <div class="flex items-center space-x-4">
+      <a href="/index.html" class="text-gray-700 hover:text-teal-600">Home</a>
+      <a href="/rooms.html" class="text-gray-700 hover:text-teal-600 font-semibold border-b-2 border-teal-600">Rooms</a>
+      <a href="/activities.html" class="text-gray-700 hover:text-teal-600">Activities</a>
+      <a href="/booking.html" class="text-gray-700 hover:text-teal-600">Book</a>
+      <a href="/contact.html" class="text-gray-700 hover:text-teal-600">Contact</a>
+      <div id="authButtons" class="flex space-x-2">
+        <button onclick="showLoginModal()" class="px-4 py-1 border border-teal-600 text-teal-600 rounded-full hover:bg-teal-50">Login</button>
+        <button onclick="showRegisterModal()" class="px-4 py-1 bg-teal-600 text-white rounded-full hover:bg-teal-700">Register</button>
+      </div>
+      <div id="userMenu" class="hidden flex items-center space-x-3">
+        <a href="/my-bookings.html" class="text-gray-700"><i class="fas fa-bookmark"></i> My Bookings</a>
+        <span id="userName" class="text-gray-700 font-medium"></span>
+        <button onclick="logout()" class="text-red-500"><i class="fas fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mx-auto px-6 py-12">
+    <h1 class="text-4xl font-serif font-bold text-center text-gray-800 mb-2">Our Premium Rooms</h1>
+    <p class="text-center text-gray-600 mb-8">40 luxurious units across 8 unique types</p>
+    <!-- Filter -->
+    <div class="flex flex-wrap justify-center gap-3 mb-10">
+      <input type="text" id="searchRooms" placeholder="Search room..." class="border rounded-full px-4 py-2 w-64 focus:ring-2 focus:ring-teal-400">
+      <select id="filterPrice" class="border rounded-full px-4 py-2 bg-white">
+        <option value="all">All Prices</option>
+        <option value="low">Under RM150</option>
+        <option value="mid">RM150 - RM220</option>
+        <option value="high">Above RM220</option>
+      </select>
+    </div>
+    <div id="roomsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
+  </div>
+
+  <!-- MODAL DETAILS with Image Gallery -->
+  <div id="roomDetailModal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50 p-4 overflow-y-auto" onclick="if(event.target===this) closeRoomDetail()">
+    <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+      <!-- Image Gallery Section -->
+      <div class="relative">
+        <img id="modalMainImage" src="" class="w-full h-80 object-cover rounded-t-2xl">
+        <button onclick="closeRoomDetail()" class="absolute top-4 right-4 bg-white rounded-full p-2 shadow-lg"><i class="fas fa-times text-gray-700"></i></button>
+        <!-- Thumbnail gallery -->
+        <div id="modalGalleryThumbs" class="absolute bottom-4 left-4 right-4 flex justify-center gap-2"></div>
+      </div>
+      <div class="p-6 md:p-8">
+        <div class="flex flex-wrap justify-between items-start gap-4 border-b pb-4 mb-4">
+          <div>
+            <h2 id="modalDetailName" class="text-3xl font-serif font-bold text-gray-800"></h2>
+            <div class="flex items-center gap-2 mt-1">
+              <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star-half-alt text-yellow-400"></i>
+              <span class="text-gray-500 text-sm">4.5 (120 reviews)</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-3xl font-bold text-teal-600">RM <span id="modalDetailPrice"></span><span class="text-base font-normal text-gray-500">/ night</span></div>
+            <p class="text-sm text-gray-500">+ taxes & fees</p>
+          </div>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-6 mb-6">
+          <!-- Key details -->
+          <div class="space-y-3">
+            <div class="flex items-center gap-2"><i class="fas fa-bed w-5 text-teal-600"></i><span><strong>Bed:</strong> <span id="modalDetailBed"></span></span></div>
+            <div class="flex items-center gap-2"><i class="fas fa-arrows-alt w-5 text-teal-600"></i><span><strong>Size:</strong> <span id="modalDetailSize"></span></span></div>
+            <div class="flex items-center gap-2"><i class="fas fa-eye w-5 text-teal-600"></i><span><strong>View:</strong> <span id="modalDetailView"></span></span></div>
+            <div class="flex items-center gap-2"><i class="fas fa-user-friends w-5 text-teal-600"></i><span><strong>Capacity:</strong> <span id="modalDetailCapacity"></span></span></div>
+            <div class="flex items-center gap-2"><i class="fas fa-door-open w-5 text-teal-600"></i><span><strong>Available Units:</strong> <span id="modalDetailQuantity" class="font-semibold"></span></span></div>
+          </div>
+          <!-- Amenities -->
+          <div>
+            <h3 class="font-semibold text-lg mb-2"><i class="fas fa-wifi mr-2 text-teal-600"></i> Amenities</h3>
+            <div id="modalDetailFeatures" class="grid grid-cols-2 gap-2"></div>
+          </div>
+          <!-- Bathroom info & policy -->
+          <div class="bg-gray-50 p-4 rounded-xl">
+            <h3 class="font-semibold text-lg mb-2"><i class="fas fa-bath mr-2 text-teal-600"></i> Bathroom</h3>
+            <p id="modalDetailBathroom" class="text-sm text-gray-600 mb-3"></p>
+            <div class="border-t pt-3 mt-2">
+              <h3 class="font-semibold text-sm mb-1"><i class="fas fa-calendar-times"></i> Cancellation</h3>
+              <p id="modalDetailPolicy" class="text-xs text-gray-500"></p>
+            </div>
+            <div class="mt-3 pt-2 border-t">
+              <p class="text-xs text-gray-500"><i class="fas fa-clock"></i> Check-in: 2:00 PM | Check-out: 12:00 PM</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mb-6">
+          <h3 class="font-semibold text-lg mb-2">Description</h3>
+          <p id="modalDetailDesc" class="text-gray-600 leading-relaxed"></p>
+        </div>
+        
+        <div class="flex gap-3 pt-4 border-t">
+          <a id="modalBookLink" href="" class="flex-1 bg-teal-600 hover:bg-teal-700 text-white text-center py-3 rounded-xl font-semibold transition shadow">Book Now</a>
+          <button onclick="closeRoomDetail()" class="px-6 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals Login/Register (sama) -->
+  <div id="loginModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50" onclick="if(event.target===this) closeLoginModal()"><div class="bg-white rounded-2xl p-6 w-full max-w-md"><h3 class="text-2xl font-bold mb-4">Login</h3><form id="loginForm"><input type="email" id="loginEmail" placeholder="Email" class="w-full border rounded-lg p-2 mb-3"><input type="password" id="loginPassword" placeholder="Password" class="w-full border rounded-lg p-2 mb-4"><button type="submit" class="w-full bg-teal-600 text-white py-2 rounded-lg">Login</button></form><button onclick="closeLoginModal()" class="mt-2 text-gray-500">Cancel</button></div></div>
+  <div id="registerModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50" onclick="if(event.target===this) closeRegisterModal()"><div class="bg-white rounded-2xl p-6 w-full max-w-md"><h3 class="text-2xl font-bold mb-4">Register</h3><form id="registerForm"><input type="text" id="regName" placeholder="Full Name" class="w-full border rounded-lg p-2 mb-3"><input type="email" id="regEmail" placeholder="Email" class="w-full border rounded-lg p-2 mb-3"><input type="password" id="regPassword" placeholder="Password (min 6)" class="w-full border rounded-lg p-2 mb-4"><button type="submit" class="w-full bg-teal-600 text-white py-2 rounded-lg">Create Account</button></form><button onclick="closeRegisterModal()" class="mt-2 text-gray-500">Cancel</button></div></div>
+
+  <script src="/script.js"></script>
+  <script>
+    let allRooms = [];
+    let currentRoomImages = [];
+    
+    function showRoomDetail(roomId) {
+      const room = allRooms.find(r => r.id === roomId);
+      if (!room) return;
+      
+      // Set main image and gallery
+      const images = room.images || [room.image];
+      currentRoomImages = images;
+      document.getElementById('modalMainImage').src = images[0];
+      // Render thumbnails
+      const thumbsContainer = document.getElementById('modalGalleryThumbs');
+      thumbsContainer.innerHTML = images.map((img, idx) => `
+        <img src="${img}" class="gallery-thumb w-16 h-12 object-cover rounded-md ${idx===0?'active-thumb':''}" onclick="changeMainImage(${idx})">
+      `).join('');
+      
+      // Fill details
+      document.getElementById('modalDetailName').innerText = room.type;
+      document.getElementById('modalDetailPrice').innerText = room.pricePerNight;
+      document.getElementById('modalDetailBed').innerText = room.bedType || 'Standard Bed';
+      document.getElementById('modalDetailSize').innerText = room.roomSize || '22 m²';
+      document.getElementById('modalDetailView').innerText = room.view || (room.type.includes('Sea')?'Sea View':'Garden View');
+      document.getElementById('modalDetailCapacity').innerText = room.capacityText || `Max ${room.maxGuests} adults`;
+      document.getElementById('modalDetailQuantity').innerHTML = `${room.quantity} units total`;
+      document.getElementById('modalDetailDesc').innerText = room.description;
+      document.getElementById('modalDetailBathroom').innerText = room.bathroom || 'Private bathroom with shower';
+      document.getElementById('modalDetailPolicy').innerText = room.cancellationPolicy || 'Free cancellation up to 7 days before check-in.';
+      
+      // Features with icons
+      const features = room.features || [];
+      const featuresContainer = document.getElementById('modalDetailFeatures');
+      featuresContainer.innerHTML = features.map(f => {
+        let icon = 'fa-check-circle';
+        if (f.toLowerCase().includes('fan')) icon = 'fa-fan';
+        else if (f.toLowerCase().includes('air conditioning')) icon = 'fa-snowflake';
+        else if (f.toLowerCase().includes('wifi')) icon = 'fa-wifi';
+        else if (f.toLowerCase().includes('bed')) icon = 'fa-bed';
+        else if (f.toLowerCase().includes('balcony')) icon = 'fa-balcony';
+        else if (f.toLowerCase().includes('jacuzzi')) icon = 'fa-hot-tub';
+        return `<div class="flex items-center gap-2"><i class="fas ${icon} text-teal-600 w-5"></i><span class="text-sm">${f}</span></div>`;
+      }).join('');
+      
+      document.getElementById('modalBookLink').href = `/booking.html?room=${room.id}`;
+      document.getElementById('roomDetailModal').classList.remove('hidden');
+      document.getElementById('roomDetailModal').classList.add('flex');
+    }
+    
+    function changeMainImage(index) {
+      if (currentRoomImages && currentRoomImages[index]) {
+        document.getElementById('modalMainImage').src = currentRoomImages[index];
+        // Update active thumbnail styling
+        const thumbs = document.querySelectorAll('.gallery-thumb');
+        thumbs.forEach((thumb, i) => {
+          if (i === index) thumb.classList.add('active-thumb');
+          else thumb.classList.remove('active-thumb');
+        });
+      }
+    }
+    
+    function closeRoomDetail() {
+      document.getElementById('roomDetailModal').classList.add('hidden');
+      document.getElementById('roomDetailModal').classList.remove('flex');
+    }
+    
+    async function loadRooms() {
+      const res = await fetch('/api/rooms');
+      allRooms = await res.json();
+      filterRooms();
+    }
+    
+    function filterRooms() {
+      const search = document.getElementById('searchRooms').value.toLowerCase();
+      const priceFilter = document.getElementById('filterPrice').value;
+      let filtered = allRooms.filter(r => r.type.toLowerCase().includes(search));
+      if (priceFilter === 'low') filtered = filtered.filter(r => r.pricePerNight < 150);
+      else if (priceFilter === 'mid') filtered = filtered.filter(r => r.pricePerNight >= 150 && r.pricePerNight <= 220);
+      else if (priceFilter === 'high') filtered = filtered.filter(r => r.pricePerNight > 220);
+      
+      const container = document.getElementById('roomsContainer');
+      container.innerHTML = filtered.map(room => `
+        <div class="room-card bg-white rounded-2xl shadow-lg overflow-hidden">
+          <img src="${room.image}" class="h-56 w-full object-cover">
+          <div class="p-4">
+            <h3 class="font-bold text-xl">${room.type}</h3>
+            <div class="text-teal-600 font-bold text-2xl">RM ${room.pricePerNight}<span class="text-sm font-normal">/night</span></div>
+            <div class="flex flex-wrap gap-1 my-2">${(room.features || []).slice(0,2).map(f => `<span class="bg-gray-100 text-xs px-2 py-0.5 rounded-full">${f}</span>`).join('')}</div>
+            <p class="text-gray-600 text-sm mb-3">${room.description.substring(0,70)}...</p>
+            <div class="flex gap-2">
+              <button onclick="showRoomDetail('${room.id}')" class="flex-1 border border-teal-600 text-teal-600 py-1 rounded-full hover:bg-teal-50">Details</button>
+              <a href="/booking.html?room=${room.id}" class="flex-1 bg-teal-600 text-white text-center py-1 rounded-full hover:bg-teal-700">Book Now</a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    window.changeMainImage = changeMainImage;
+    document.getElementById('searchRooms').addEventListener('input', filterRooms);
+    document.getElementById('filterPrice').addEventListener('change', filterRooms);
+    loadRooms();
+  </script>
+</body>
+</html>

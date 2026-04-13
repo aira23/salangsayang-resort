@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | SalangSayang Resort</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .sidebar-item { transition: all 0.2s; }
+    .sidebar-item:hover { background: rgba(255,255,255,0.1); transform: translateX(4px); }
+    .table-row:hover { background-color: #f9fafb; }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <div class="w-72 bg-gradient-to-b from-gray-900 to-gray-800 text-white flex flex-col shadow-2xl">
+      <div class="p-6 border-b border-gray-700">
+        <h2 class="text-2xl font-bold"><i class="fas fa-crown text-yellow-500 mr-2"></i>Admin Panel</h2>
+        <p class="text-xs text-gray-400 mt-1">SalangSayang Resort</p>
+      </div>
+      <nav class="flex-1 p-4 space-y-1">
+        <button onclick="showTab('dashboard')" id="navDashboard" class="sidebar-item w-full text-left py-3 px-4 rounded-xl flex items-center gap-3 hover:bg-white/10 transition"><i class="fas fa-tachometer-alt w-5"></i> Dashboard</button>
+        <button onclick="showTab('rooms')" id="navRooms" class="sidebar-item w-full text-left py-3 px-4 rounded-xl flex items-center gap-3 hover:bg-white/10 transition"><i class="fas fa-hotel w-5"></i> Manage Rooms</button>
+        <button onclick="showTab('bookings')" id="navBookings" class="sidebar-item w-full text-left py-3 px-4 rounded-xl flex items-center gap-3 hover:bg-white/10 transition"><i class="fas fa-calendar-check w-5"></i> All Bookings</button>
+        <button onclick="showTab('users')" id="navUsers" class="sidebar-item w-full text-left py-3 px-4 rounded-xl flex items-center gap-3 hover:bg-white/10 transition"><i class="fas fa-users w-5"></i> Users</button>
+      </nav>
+      <div class="p-4 border-t border-gray-700">
+        <button onclick="logoutAdmin()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded-xl transition"><i class="fas fa-sign-out-alt mr-2"></i> Logout</button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-auto p-6">
+      <!-- Dashboard Tab -->
+      <div id="dashboardTab" class="tab-content">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Dashboard Overview</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div class="bg-white rounded-2xl shadow p-5"><div class="flex items-center gap-3"><i class="fas fa-bed text-3xl text-teal-600"></i><div><p class="text-gray-500 text-sm">Total Rooms</p><p id="statTotalRooms" class="text-2xl font-bold">0</p></div></div></div>
+          <div class="bg-white rounded-2xl shadow p-5"><div class="flex items-center gap-3"><i class="fas fa-calendar-check text-3xl text-teal-600"></i><div><p class="text-gray-500 text-sm">Total Bookings</p><p id="statTotalBookings" class="text-2xl font-bold">0</p></div></div></div>
+          <div class="bg-white rounded-2xl shadow p-5"><div class="flex items-center gap-3"><i class="fas fa-users text-3xl text-teal-600"></i><div><p class="text-gray-500 text-sm">Registered Users</p><p id="statTotalUsers" class="text-2xl font-bold">0</p></div></div></div>
+        </div>
+        <!-- Recent Bookings Preview -->
+        <h3 class="text-xl font-bold mb-3">Recent Bookings</h3>
+        <div id="recentBookingsTable" class="bg-white rounded-xl shadow overflow-hidden"></div>
+      </div>
+
+      <!-- Rooms Tab -->
+      <div id="roomsTab" class="tab-content hidden">
+        <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-bold">Rooms Inventory</h2><button onclick="openRoomModal()" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-xl"><i class="fas fa-plus mr-1"></i> Add Room</button></div>
+        <div id="roomsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+      </div>
+
+      <!-- Bookings Tab (Enhanced Table with Search & Filter) -->
+      <div id="bookingsTab" class="tab-content hidden">
+        <h2 class="text-2xl font-bold mb-4">All Customer Bookings</h2>
+        <!-- Filter Bar -->
+        <div class="bg-white rounded-xl shadow p-4 mb-5">
+          <div class="grid md:grid-cols-5 gap-3">
+            <input type="text" id="filterName" placeholder="Guest Name / Email" class="border rounded-lg p-2">
+            <input type="text" id="filterRoom" placeholder="Room Type" class="border rounded-lg p-2">
+            <select id="filterStatus" class="border rounded-lg p-2"><option value="">All Status</option><option value="confirmed">Confirmed</option><option value="cancelled">Cancelled</option></select>
+            <input type="text" id="filterDate" placeholder="Check-in date (YYYY-MM-DD)" class="border rounded-lg p-2">
+            <button onclick="filterBookings()" class="bg-teal-600 text-white rounded-lg px-4 py-2"><i class="fas fa-search mr-1"></i> Search</button>
+          </div>
+        </div>
+        <!-- Bookings Table -->
+        <div class="bg-white rounded-xl shadow overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Guest</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Room</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Check-in</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Check-out</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rooms</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Guests</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total (RM)</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
+              </tr>
+            </thead>
+            <tbody id="bookingsTableBody" class="divide-y divide-gray-200"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Users Tab -->
+      <div id="usersTab" class="tab-content hidden">
+        <h2 class="text-2xl font-bold mb-4">Registered Users</h2>
+        <div class="bg-white rounded-xl shadow overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50"><tr><th class="px-4 py-3 text-left">Name</th><th class="px-4 py-3 text-left">Email</th><th class="px-4 py-3 text-left">Role</th><th class="px-4 py-3 text-left">Joined</th></tr></thead>
+            <tbody id="usersTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Room Modal (Add/Edit) -->
+  <div id="roomModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4" onclick="if(event.target===this) closeRoomModal()">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full"><div class="bg-gradient-to-r from-teal-600 to-teal-500 px-6 py-4 rounded-t-2xl"><h3 id="modalTitle" class="text-xl font-bold text-white">Add New Room</h3></div><div class="p-6"><form id="roomForm"><input type="hidden" id="roomId"><input type="text" id="roomType" placeholder="Room Type" class="w-full border rounded-xl p-2 mb-3" required><input type="number" id="roomPrice" placeholder="Price per night (RM)" class="w-full border rounded-xl p-2 mb-3" required><input type="number" id="roomMaxGuests" placeholder="Max Guests" class="w-full border rounded-xl p-2 mb-3"><input type="number" id="roomQuantity" placeholder="Total Quantity (units)" class="w-full border rounded-xl p-2 mb-3"><input type="text" id="roomImage" placeholder="Image URL" class="w-full border rounded-xl p-2 mb-3"><textarea id="roomDesc" placeholder="Description" rows="2" class="w-full border rounded-xl p-2 mb-3"></textarea><input type="text" id="roomFeatures" placeholder="Features (comma separated)" class="w-full border rounded-xl p-2 mb-3"><input type="text" id="roomCapacityText" placeholder="Capacity text" class="w-full border rounded-xl p-2 mb-4"><button type="submit" class="w-full bg-teal-600 text-white py-2 rounded-xl font-semibold">Save Room</button></form><button onclick="closeRoomModal()" class="mt-3 text-gray-500 text-sm w-full text-center">Cancel</button></div></div>
+  </div>
+
+  <script src="/script.js"></script>
+  <script>
+    let allBookingsData = [];
+    let allUsersData = [];
+
+    async function initAdmin() {
+      const res = await fetch('/api/auth/me');
+      const data = await res.json();
+      if (!data.user || data.user.role !== 'admin') { alert('Admin only'); window.location='/index.html'; return; }
+      await loadStats();
+      await loadRoomsAdmin();
+      await loadAllBookings();
+      await loadUsers();
+      showTab('dashboard');
+    }
+
+    async function loadStats() {
+      const roomsRes = await fetch('/api/rooms');
+      const rooms = await roomsRes.json();
+      document.getElementById('statTotalRooms').innerText = rooms.reduce((sum,r)=>sum+r.quantity,0);
+      const bookingsRes = await fetch('/api/admin/bookings');
+      const bookings = await bookingsRes.json();
+      document.getElementById('statTotalBookings').innerText = bookings.filter(b=>b.status==='confirmed').length;
+      const usersRes = await fetch('/api/admin/users');
+      const users = await usersRes.json();
+      document.getElementById('statTotalUsers').innerText = users.length;
+      // Recent bookings (last 5)
+      const recent = bookings.slice(-5).reverse();
+      const recentHtml = `<table class="min-w-full"><thead class="bg-gray-50"><tr><th class="px-3 py-2 text-left text-xs">Guest</th><th class="px-3 py-2 text-left text-xs">Room</th><th class="px-3 py-2 text-left text-xs">Dates</th><th class="px-3 py-2 text-left text-xs">Total</th><th class="px-3 py-2 text-left text-xs">Status</th></tr></thead><tbody>${recent.map(b=>`<tr class="border-b"><td class="px-3 py-2 text-sm">${b.userName || b.userId}</td><td class="px-3 py-2 text-sm">${b.roomName}</td><td class="px-3 py-2 text-sm">${b.checkIn} → ${b.checkOut}</td><td class="px-3 py-2 text-sm">RM${b.totalPrice}</td><td class="px-3 py-2"><span class="px-2 py-0.5 rounded-full text-xs ${b.status==='confirmed'?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${b.status}</span></td></tr>`).join('')}</tbody></table>`;
+      document.getElementById('recentBookingsTable').innerHTML = recentHtml;
+    }
+
+    async function loadAllBookings() {
+      const res = await fetch('/api/admin/bookings');
+      allBookingsData = await res.json();
+      // Fetch user names for each booking
+      for (let b of allBookingsData) {
+        if (b.userId && !b.userName) {
+          const user = allUsersData.find(u => u.id === b.userId);
+          b.userName = user ? user.name : b.userId;
+        }
+      }
+      filterBookings();
+    }
+
+    function filterBookings() {
+      const nameFilter = document.getElementById('filterName').value.toLowerCase();
+      const roomFilter = document.getElementById('filterRoom').value.toLowerCase();
+      const statusFilter = document.getElementById('filterStatus').value;
+      const dateFilter = document.getElementById('filterDate').value;
+      let filtered = allBookingsData.filter(b => {
+        if (nameFilter && !(b.userName?.toLowerCase().includes(nameFilter) || b.userId?.toLowerCase().includes(nameFilter))) return false;
+        if (roomFilter && !b.roomName.toLowerCase().includes(roomFilter)) return false;
+        if (statusFilter && b.status !== statusFilter) return false;
+        if (dateFilter && !b.checkIn.includes(dateFilter)) return false;
+        return true;
+      });
+      const tbody = document.getElementById('bookingsTableBody');
+      tbody.innerHTML = filtered.map(b => `
+        <tr class="table-row hover:bg-gray-50">
+          <td class="px-4 py-3 text-sm">${b.userName || b.userId}</td>
+          <td class="px-4 py-3 text-sm font-medium">${b.roomName}</td>
+          <td class="px-4 py-3 text-sm">${b.checkIn}</td>
+          <td class="px-4 py-3 text-sm">${b.checkOut}</td>
+          <td class="px-4 py-3 text-sm">${b.roomCount || 1}</td>
+          <td class="px-4 py-3 text-sm">${b.guests}</td>
+          <td class="px-4 py-3 text-sm font-semibold">RM${b.totalPrice}</td>
+          <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs ${b.status==='confirmed'?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${b.status}</span></td>
+          <td class="px-4 py-3">${b.status !== 'cancelled' ? `<button onclick="adminCancelBooking('${b.id}')" class="bg-red-500 text-white px-2 py-1 rounded text-xs">Cancel</button>` : '-'}</td>
+        </tr>
+      `).join('');
+    }
+
+    async function loadUsers() {
+      const res = await fetch('/api/admin/users');
+      allUsersData = await res.json();
+      const tbody = document.getElementById('usersTableBody');
+      tbody.innerHTML = allUsersData.map(u => `<tr class="border-b"><td class="px-4 py-2">${u.name}</td><td class="px-4 py-2">${u.email}</td><td class="px-4 py-2">${u.role}</td><td class="px-4 py-2 text-xs text-gray-400">-</td></tr>`).join('');
+    }
+
+    async function logoutAdmin() { await fetch('/api/auth/logout',{method:'POST'}); window.location='/index.html'; }
+    function showTab(tab) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`${tab}Tab`).classList.remove('hidden');
+      ['Dashboard','Rooms','Bookings','Users'].forEach(t => {
+        const btn = document.getElementById(`nav${t}`);
+        if (btn) btn.classList.remove('bg-white/20');
+      });
+      document.getElementById(`nav${tab.charAt(0).toUpperCase()+tab.slice(1)}`).classList.add('bg-white/20');
+      if (tab === 'bookings') filterBookings();
+      if (tab === 'dashboard') loadStats();
+    }
+    window.filterBookings = filterBookings;
+    window.adminCancelBooking = async (id) => { if(confirm('Cancel booking?')){ await fetch(`/api/admin/bookings/${id}`,{method:'DELETE'}); loadAllBookings(); loadStats(); } };
+    window.openRoomModal = openRoomModal;
+    window.closeRoomModal = closeRoomModal;
+    initAdmin();
+  </script>
+</body>
+</html>

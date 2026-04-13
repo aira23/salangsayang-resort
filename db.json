@@ -1,0 +1,258 @@
+{
+  "users": [
+    {
+      "id": "admin1",
+      "name": "Administrator",
+      "email": "admin@salangsayang.com",
+      "password": "$2b$10$VPyFjWNm2XENX2bHn2apX.wO15/7iVex.x2o/oPlt45FFhzawMkyW",
+      "role": "admin"
+    },
+    {
+      "id": "1776097987718",
+      "name": "Adra Sofea",
+      "email": "client1@gmail.com",
+      "password": "$2b$10$DXK7xu.PddxeMIumqHUJa.2aSKV03INyfx2MIXXp160Bsgb5IuwEW",
+      "role": "user"
+    }
+  ],
+  "bookings": [
+    {
+      "id": "1776098066100",
+      "userId": "1776097987718",
+      "userName": "Adra Sofea",
+      "roomId": "2",
+      "roomName": "Fan Room - Double Sea View",
+      "checkIn": "2026-04-14",
+      "checkOut": "2026-04-16",
+      "guests": 3,
+      "roomCount": 1,
+      "totalPrice": 240,
+      "status": "confirmed",
+      "createdAt": "2026-04-13T16:34:26.100Z",
+      "guestFullName": "adra sofea",
+      "guestPhone": "0198745632",
+      "guestEmail": "airahzqh@gmail.com",
+      "specialRequests": "extra pillow\n"
+    }
+  ],
+  "rooms": [
+    {
+      "id": "1",
+      "type": "Fan Room - Double Garden View",
+      "pricePerNight": 80,
+      "maxGuests": 2,
+      "quantity": 5,
+      "image": "https://images.pexels.com/photos/271618/pexels-photo-271618.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "images": [
+        "https://images.pexels.com/photos/271618/pexels-photo-271618.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/2587054/pexels-photo-2587054.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800"
+      ],
+      "description": "Cozy fan room overlooking tropical garden.",
+      "features": [
+        "Double Bed",
+        "Fan",
+        "Garden View",
+        "Free WiFi",
+        "Daily Housekeeping"
+      ],
+      "bedType": "Double Bed (140cm)",
+      "roomSize": "22 m²",
+      "view": "Garden View",
+      "bathroom": "Private bathroom with shower",
+      "cancellationPolicy": "Free cancellation up to 7 days before check-in.",
+      "capacityText": "Max 2 adults"
+    },
+    {
+      "id": "2",
+      "type": "Fan Room - Double Sea View",
+      "pricePerNight": 120,
+      "maxGuests": 2,
+      "quantity": 5,
+      "image": "https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "images": [
+        "https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/2587054/pexels-photo-2587054.jpeg?auto=compress&cs=tinysrgb&w=800"
+      ],
+      "description": "Enjoy sea breeze from your window.",
+      "features": [
+        "Double Bed",
+        "Fan",
+        "Sea View",
+        "Free WiFi",
+        "Balcony"
+      ],
+      "bedType": "Double Bed (150cm)",
+      "roomSize": "24 m²",
+      "view": "Sea View",
+      "bathroom": "Private bathroom with rain shower",
+      "cancellationPolicy": "Free cancellation up to 7 days before check-in.",
+      "capacityText": "Max 2 adults"
+    },
+    {
+      "id": "3",
+      "type": "Fan Room - Banana Hill",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "quantity": 5,
+      "image": "https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "images": [
+        "https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/2587054/pexels-photo-2587054.jpeg?auto=compress&cs=tinysrgb&w=800"
+      ],
+      "description": "Quiet hill location.",
+      "features": [
+        "Double Bed",
+        "Fan",
+        "Hill View",
+        "Free WiFi",
+        "Terrace"
+      ],
+      "bedType": "Double Bed (140cm)",
+      "roomSize": "22 m²",
+      "view": "Hill View",
+      "bathroom": "Private bathroom with shower",
+      "cancellationPolicy": "Free cancellation up to 7 days before check-in.",
+      "capacityText": "Max 2 adults"
+    },
+    {
+      "id": "4",
+      "type": "AC Room - Banana Hill",
+      "pricePerNight": 130,
+      "maxGuests": 2,
+      "quantity": 5,
+      "image": "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "images": [
+        "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/2587054/pexels-photo-2587054.jpeg?auto=compress&cs=tinysrgb&w=800"
+      ],
+      "description": "Air-conditioned comfort.",
+      "features": [
+        "Double Bed",
+        "Air Conditioning",
+        "Hill View",
+        "Free WiFi",
+        "Terrace"
+      ],
+      "bedType": "Queen Bed (160cm)",
+      "roomSize": "26 m²",
+      "view": "Hill View",
+      "bathroom": "Private bathroom with bathtub",
+      "cancellationPolicy": "Free cancellation up to 7 days before check-in.",
+      "capacityText": "Max 2 adults"
+    },
+    {
+      "id": "5",
+      "type": "AC Triple - Garden View",
+      "pricePerNight": 180,
+      "maxGuests": 3,
+      "quantity": 5,
+      "image": "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "images": [
+        "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/2587054/pexels-photo-2587054.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800"
+      ],
+      "description": "Spacious for small groups.",
+      "features": [
+        "3 Single Beds",
+        "Air Conditioning",
+        "Garden View",
+        "Free WiFi",
+        "Seating Area"
+      ],
+      "bedType": "3 Single Beds (90cm)",
+      "roomSize": "32 m²",
+      "view": "Garden View",
+      "bathroom": "Private bathroom with shower",
+      "cancellationPolicy": "Free cancellation up to 7 days before check-in.",
+      "capacityText": "Max 3 adults"
+    },
+    {
+      "id": "6",
+      "type": "AC Family - Garden View",
+      "pricePerNight": 220,
+      "maxGuests": 4,
+      "quantity": 5,
+      "image": "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "images": [
+        "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/2587054/pexels-photo-2587054.jpeg?auto=compress&cs=tinysrgb&w=800"
+      ],
+      "description": "Ideal for families.",
+      "features": [
+        "Queen + Single Bed",
+        "Air Conditioning",
+        "Garden View",
+        "Free WiFi",
+        "Living Area"
+      ],
+      "bedType": "Queen Bed + Single Bed",
+      "roomSize": "38 m²",
+      "view": "Garden View",
+      "bathroom": "Private bathroom with bathtub",
+      "cancellationPolicy": "Free cancellation up to 7 days before check-in.",
+      "capacityText": "Max 4 adults"
+    },
+    {
+      "id": "7",
+      "type": "AC Deluxe Double - Sea View",
+      "pricePerNight": 250,
+      "maxGuests": 2,
+      "quantity": 5,
+      "image": "https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "images": [
+        "https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/2587054/pexels-photo-2587054.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800"
+      ],
+      "description": "Deluxe room with sea view balcony.",
+      "features": [
+        "King Bed",
+        "Air Conditioning",
+        "Sea View Balcony",
+        "Free WiFi",
+        "Mini Bar",
+        "Jacuzzi"
+      ],
+      "bedType": "King Bed (180cm)",
+      "roomSize": "45 m²",
+      "view": "Panoramic Sea View",
+      "bathroom": "Private bathroom with Jacuzzi",
+      "cancellationPolicy": "Free cancellation up to 14 days before check-in.",
+      "capacityText": "Max 2 adults + 1 child"
+    },
+    {
+      "id": "8",
+      "type": "AC Super Deluxe Triple - Sea View",
+      "pricePerNight": 250,
+      "maxGuests": 3,
+      "quantity": 5,
+      "image": "https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "images": [
+        "https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/2587054/pexels-photo-2587054.jpeg?auto=compress&cs=tinysrgb&w=800"
+      ],
+      "description": "Luxurious triple room with sea view.",
+      "features": [
+        "King + Single Bed",
+        "Air Conditioning",
+        "Sea View Balcony",
+        "Free WiFi",
+        "Living Area"
+      ],
+      "bedType": "King Bed + Single Bed",
+      "roomSize": "48 m²",
+      "view": "Sea View",
+      "bathroom": "Private bathroom with rain shower",
+      "cancellationPolicy": "Free cancellation up to 14 days before check-in.",
+      "capacityText": "Max 3 adults"
+    }
+  ]
+}
